@@ -40,11 +40,27 @@ print('''line1
 
 6. bytes
 
-&emsp;&emsp;Python对bytes类型的数据用带b前缀的单引号或双引号表示
+- &emsp;&emsp;Python对bytes类型的数据用带b前缀的单引号或双引号表示
 
-&emsp;&emsp;要注意区分'ABC'和b'ABC'，前者是str，后者虽然内容显示得和前者一样，但bytes的每个字符都只占用一个字节。
+&emsp;&emsp;要注意区分'ABC'和b'ABC'，前者是str，后者虽然内容显示得和前者一样，但bytes的每个字符都只占用一个字节。纯英文的str可以用ASCII编码为bytes，内容是一样的，含有中文的str可以用UTF-8编码为bytes。
 
-7. 
+- 在bytes中，无法显示为ASCII字符的字节，用\x##显示。
+
+```python
+>>> 'ABC'.encode('ascii')
+b'ABC'
+>>> '中文'.encode('utf-8')
+b'\xe4\xb8\xad\xe6\x96\x87'
+```
+
+&emsp;&emsp;如果我们从网络或磁盘上读取了字节流，那么读到的数据就是bytes。要把bytes变为str，就需要用decode()方法：
+
+```python
+>>> b'ABC'.decode('ascii')
+'ABC'
+>>> b'\xe4\xb8\xad\xe6\x96\x87'.decode('utf-8')
+'中文'
+``` 
 
 ### 变量
 
@@ -79,7 +95,7 @@ print('''line1
 
 ## 字符串和编码
 
-**字符串也是一种数据类型，但是，字符串比较特殊的是还有一个编码问题。**
+&emsp;&emsp;**字符串也是一种数据类型，但是，字符串比较特殊的是还有一个编码问题。**
 
 ### ASCII编码的由来
 
@@ -103,9 +119,9 @@ print('''line1
 
 ### 内存和磁盘编码的编码策略
 
-**在计算机内存中，统一使用Unicode编码，当需要保存到硬盘或者需要传输的时候，就转换为UTF-8编码或者其它编码。**
+&emsp;&emsp;**在计算机内存中，统一使用Unicode编码，当需要保存到硬盘或者需要传输的时候，就转换为UTF-8编码或者其它编码。**
 
-&emsp;&emsp;比如：用记事本编辑的时候，从文件读取的UTF-8字符被转换为Unicode字符到内存里，编辑完成后，保存的时候再把Unicode转换为UTF-8保存到文件。
+&emsp;&emsp;比如：用记事本编辑的时候，从文件读取的UTF-8字符 被转换为Unicode字符到内存里，编辑完成后，保存的时候再把Unicode转换为UTF-8保存到文件。
 
 ### Python的字符串
 
@@ -116,14 +132,136 @@ print('''line1
 包含中文的str
 ```
 
+&emsp;&emsp;由于Python源代码也是一个文本文件，所以，当你的源代码中包含中文的时候，在保存源代码时，就需要务必指定保存为UTF-8编码。当Python解释器读取源代码时，为了让它按UTF-8编码读取，我们通常在文件开头写上这两行：
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+```
+
+- ord()
+
+&emsp;&emsp;ord()函数获取字符的整数表示
+
 ```python
 >>> ord('A')
 65
 # Python 2会报错    
 >>> ord('中')
 20013
+```
+
+- chr()
+
+&emsp;&emsp;chr()函数把编码转换为对应的字符
+
+```python
 >>> chr(66)
 'B'
 >>> chr(25991)
 '文'
 ```
+
+- encode()
+
+&emsp;&emsp;以Unicode表示的str通过encode()方法可以编码为指定的bytes
+
+```python
+>>> 'ABC'.encode('ascii')
+b'ABC'
+>>> '中文'.encode('utf-8')
+b'\xe4\xb8\xad\xe6\x96\x87'
+```
+
+- decode()
+
+&emsp;&emsp;如果我们从网络或磁盘上读取了字节流，那么读到的数据就是bytes。要把bytes变为str，就需要用decode()方法：
+
+```python
+>>> b'ABC'.decode('ascii')
+'ABC'
+>>> b'\xe4\xb8\xad\xe6\x96\x87'.decode('utf-8')
+'中文'
+```
+
+- len()
+
+&emsp;&emsp;函数计算的是str的字符数，如果换成bytes，len()函数就计算字节数
+
+```python
+>>> len('ABC')
+3
+>>> len('中文')
+2
+>> len(b'ABC')
+3
+>>> len(b'\xe4\xb8\xad\xe6\x96\x87')
+6
+>>> len('中文'.encode('utf-8'))
+6
+```
+
+- format()
+
+```python
+>>> 'Hello, {0}, 成绩提升了 {1:.1f}%'.format('小明', 17.125)
+'Hello, 小明, 成绩提升了 17.1%'
+```
+
+- %格式化与%d %f %s %x
+
+```python
+>>> 'Hello, %s' % 'world'
+'Hello, world'
+>>> 'Hi, %s, you have $%d.' % ('Michael', 1000000)
+'Hi, Michael, you have $1000000.'
+# %转义
+>>> 'growth rate: %d %%' % 7
+'growth rate: 7 %'
+# 万能的%s
+>>> 'Age: %s. Gender: %s' % (25, True)
+'Age: 25. Gender: True'
+# 格式化整数和浮点数还可以指定是否补0和整数与小数的位数
+>>> '%2d-%02d' % (3, 1)
+' 3-01'
+>>> '%.2f' % 3.1415926
+'3.14'
+```
+
+### 编码对比 ：python2 VS. python3
+
+- python2打印‘中文’异常
+```python
+#!/usr/bin/env python
+
+print('中文')
+```
+
+```python
+File "./print2.py", line 3
+# SyntaxError: Non-ASCII character '\xe4' in file ./print2.py on line 3, but no encoding declared; see http://python.org/dev/peps/pep-0263/ for details
+```
+
+- python2增加编码说明打印‘中文’正常
+
+```python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+print('中文')
+```
+
+```python
+chmod a+x print2-1.py
+./print2-1.py
+中文
+```
+
+- python3无需设置编码格式也可以正常打印
+
+```python
+#!/usr/bin/env python3
+
+print('中文')
+```
+
+## lis和tuple
+

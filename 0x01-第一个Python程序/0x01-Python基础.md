@@ -18,7 +18,7 @@
 
 ## Python安装
 
-如果你正在使用Mac，系统是OS X>=10.9，那么系统自带的Python版本是2.7。安装最新的Python 3.7方法如下：（需要提前安装好Homebrew）运行Python时，请打开终端，然后运行python3。
+&emsp;&emsp;如果你正在使用Mac，系统是OS X>=10.9，那么系统自带的Python版本是2.7。安装最新的Python 3.7方法如下：（需要提前安装好Homebrew）运行Python时，请打开终端，然后运行python3。
 
 ```shell
 brew install python3
@@ -34,29 +34,41 @@ python3
 
 ## Python解释器
 
-Python有多种解释器，其中CPython是默认的解释器
+&emsp;&emsp;Python有多种解释器，其中CPython是默认的解释器
 
 ## 命令行模式 VS. Python交互模式
 
 ### 命令行模式
 
-在命令行模式下，可以执行python进入Python交互式环境，也可以执行python hello.py运行一个.py文件
+&emsp;&emsp;在命令行模式下，可以执行python进入Python交互式环境，也可以执行python hello.py运行一个.py文件
 
 ### Python交互模式
 
-在命令行模式下敲命令python，就看到类似如下的一堆文本输出，然后就进入到Python交互模式，它的提示符是>>>。在Python交互模式下输入exit()或者quit()并回车或者 Ctrl-D，就退出了Python交互模式，并回到命令行模式
+&emsp;&emsp;在命令行模式下敲命令python，就看到类似如下的一堆文本输出，然后就进入到Python交互模式，它的提示符是>>>。在Python交互模式下输入exit()或者quit()并回车或者 Ctrl-D，就退出了Python交互模式，并回到命令行模式
 
 ### PK结果
 
-Python交互式环境会把每一行Python代码的结果自动打印出来，但是，直接运行Python代码却不会。Python交互模式的代码是输入一行，执行一行，而命令行模式下直接运行.py文件是一次性执行该文件内的所有代码。可见，Python交互模式主要是为了调试Python代码用的，也便于初学者学习，它不是正式运行Python代码的环境！
+&emsp;&emsp;Python交互式环境会把每一行Python代码的结果自动打印出来，但是，直接运行Python代码却不会。Python交互模式的代码是输入一行，执行一行，而命令行模式下直接运行.py文件是一次性执行该文件内的所有代码。可见，Python交互模式主要是为了调试Python代码用的，也便于初学者学习，它不是正式运行Python代码的环境！
 
 ## 如何直接运行Python程序
 
-文件的开头直接输入运行环境即可
+1. 文件的开头直接输入运行环境
 
 ```python
 #!/usr/bin/env python3
 ```
+
+2. 赋予执行权限 
+```shell
+chmod a+x hello.py
+```
+
+3. 执行
+
+```shell
+./hello.py
+```
+
 
 ## 参考文献
 [廖雪峰的Python教程][1]
